@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace FeedForward_NeuralNetwork
 {
@@ -25,12 +26,16 @@ namespace FeedForward_NeuralNetwork
 
         public void Randomize(Random random, double min, double max)
         {
-            for (int i = 0; i < Dendrites.Length; i++) Dendrites[i].Weight = random.Next((int)min, (int)max);
+            for (int i = 0; i < Dendrites.Length; i++) Dendrites[i].Weight = (random.NextDouble() * (max - min)) + min;
         }
 
         public double Compute()
         {
-            return 0; // outputs of the dendrites and the bias, then putting the input through the activation function
+            double input = 0; 
+            for (int i = 0; i < Dendrites.Length; i++) input += Dendrites[i].Weight;
+            input += Bias;
+
+            return Activation.FunctionFunc(input);
         }
     }
 }

@@ -6,8 +6,5 @@ namespace FeedForward_NeuralNetwork
 {
     internal class Program
     {
-        static void Main(string[] args)
-        {
-        }
     }
 }
