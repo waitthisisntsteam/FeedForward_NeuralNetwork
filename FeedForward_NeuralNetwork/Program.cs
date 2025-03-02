@@ -6,5 +6,8 @@ namespace FeedForward_NeuralNetwork
 {
     internal class Program
     {
+        //Training Methods:
+
+
     }
 }
