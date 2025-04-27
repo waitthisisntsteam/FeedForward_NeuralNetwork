@@ -8,6 +8,7 @@ namespace FeedForward_NeuralNetwork
 {
     public class Layer
     {
+        //Base Network:
         public Neuron[] Neurons { get; }
         public double[] Outputs { get; }
 
@@ -44,8 +45,25 @@ namespace FeedForward_NeuralNetwork
             {
                 Outputs[i] = Neurons[i].Compute();
             }
-
             return Outputs;
+        }
+
+
+        //Gradient Descent
+        public void ApplyUpdates(double momentum)
+        {
+            for (int i = 0; i < Neurons.Length; i++)
+            {
+                Neurons[i].ApplyUpdates(momentum);
+            }
+        }
+
+        public void Backprop(double learningRate)
+        {
+            for (int i = 0; i < Neurons.Length; i++)
+            {
+                Neurons[i].Backprop(learningRate);
+            }
         }
     }
 }

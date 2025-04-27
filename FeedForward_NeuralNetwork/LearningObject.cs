@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace FeedForward_NeuralNetwork
 {
+    //Genetic Learning:
     public class LearningObject <T>
     {
         public double Fitness;

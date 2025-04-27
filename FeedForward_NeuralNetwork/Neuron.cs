@@ -9,12 +9,20 @@ namespace FeedForward_NeuralNetwork
 {
     public class Neuron
     {
+        //Gradient Descent
+        public double Delta { get; set; }
+        public double BiasUpdate;
+        public double PreviousBiasUpdate;
+
+
+        //Base Network:
         public double Bias;
         public Dendrite[] Dendrites;
 
         public double Output { get; set; }
         public double Input { get; private set; }
         public ActivationFunction Activation { get; set; }
+
 
         public Neuron(ActivationFunction activation, Neuron?[] previousNeurons)
         {
@@ -49,20 +57,47 @@ namespace FeedForward_NeuralNetwork
 
         public double Compute()
         {
-            double input = 0;
-            if (Dendrites != null)
+            Input = Bias;
+            for (int i = 0; i < Dendrites.Length; i++)
             {
-                for (int i = 0; i < Dendrites.Length; i++)
-                {
-                    input += Dendrites[i].Compute();
-                }
+                Input += Dendrites[i].Compute();
+            }
+            Output = Activation.FunctionFunc(Input);
+            return Output;
+
+        }
+
+
+        //Gradient Descent:
+        public void ApplyUpdates(double momentum)
+        {
+            BiasUpdate += PreviousBiasUpdate * momentum;
+            Bias += BiasUpdate;
+            PreviousBiasUpdate = BiasUpdate;
+            BiasUpdate = 0;
+
+            for (int i = 0; i < Dendrites.Length; i++)
+            {
+                Dendrites[i].ApplyUpdates(momentum);
+            }
+        }
+
+        public void Backprop(double learningRate)
+        {
+            double aPrimeZ = Activation.DerivativeFunc(Input);
+
+            for (int i = 0; i < Dendrites.Length; i++)
+            {
+                Dendrites[i].Previous.Delta += Delta * aPrimeZ * Dendrites[i].Weight;
+
+                double weightPartialDerivative = Delta * aPrimeZ * Dendrites[i].Previous.Output;
+                Dendrites[i].WeightUpdate += learningRate * -weightPartialDerivative;
             }
 
-            input += Bias;
-            Input = input;
-            Output = Activation.FunctionFunc(input);
+            double biasPartialDerivative = Delta * aPrimeZ;
+            BiasUpdate += learningRate * -biasPartialDerivative;
 
-            return Output;
+            Delta = 0;
         }
     }
 }
